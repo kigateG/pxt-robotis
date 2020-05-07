@@ -1,5 +1,5 @@
 {
-    "name": "irSensor",
+    "name": "irsensor",
     "description": "A irSensor driver",
     "files": [
         "README.md",
