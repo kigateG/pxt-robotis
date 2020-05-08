@@ -730,7 +730,6 @@ namespace pxsim.visuals {
                 svg.fill(this.buttons[i], buttons[i].pressed ? theme.buttonDown : theme.buttonUps[i]);
             }
 
-            // this.updateLedRGB();
             this.onBoardLeds.forEach(l => l.updateState());
 
             this.updateGestures();
@@ -752,38 +751,7 @@ namespace pxsim.visuals {
                 this.lastFlashTime = now;
                 svg.animate(this.systemLed, "sim-flash")
             }
-        }
-
-        private updateLedRGB() {
-            let state = this.board;
-            if (!state) return;
-           
-            // const rgb = [0,0,0];
-            const rgb = state.lightRGBState.getColor();            
-
-            if (this.ledRGB) {
-                if (!rgb || 
-                    (rgb.length >= 3 && rgb[0] === 0 && rgb[1] === 0 && rgb[2] === 0) ||
-                    (rgb.length >= 3 && rgb[0] === undefined && rgb[1] === undefined && rgb[2] === undefined)
-                    ) {
-                    // Clear the pixel
-                    svg.fill(this.ledRGB, `#000000`);
-                    svg.filter(this.ledRGB, null);
-                    this.ledRGB.style.strokeWidth = "0.28349999";
-                    this.ledRGB.style.stroke = "#58595b";
-                } else {
-                    let hsl = visuals.rgbToHsl(rgb);
-                    let [h, s, l] = hsl;
-                    let lx = Math.max(l * 1.3, 85);
-                    // at least 10% luminosity
-                    l = l * 90 / 100 + 10;
-                    this.ledRGB.style.stroke = `hsl(${h}, ${s}%, ${Math.min(l * 3, 75)}%)`
-                    this.ledRGB.style.strokeWidth = "1.5";
-                    svg.fill(this.ledRGB, `hsl(${h}, ${s}%, ${lx}%)`)
-                    svg.filter(this.ledRGB, null);
-                }
-            }
-        }
+        }        
 
         private updateSound() {
             // let state = this.board;
@@ -796,33 +764,6 @@ namespace pxsim.visuals {
             // } else {
             //     U.removeClass(soundBoard, "sim-sound-stroke");
             // }
-        }
-
-        private updatePins() {
-            let state = this.board;
-            if (!state || !state.edgeConnectorState) return;
-            state.edgeConnectorState.pins.forEach((pin, i) => this.updatePin(pin, i));
-        }
-
-        private updatePin(pin: Pin, index: number) {
-            if (!pin || !this.pins[index]) return;
-
-            if ((pin as pins.CommonPin).used) {
-                if (this.pinControls[pin.id] === undefined) {
-                    const pinName = pinNames.filter((a) => a.id === pin.id)[0];
-                    if (pinName) {
-                        this.pinControls[pin.id] = new AnalogPinControl(this, this.defs, pin.id, pinName.name);
-                    }
-                    else {
-                        // TODO: Surface pin controls for sensor pins in some way?
-                        this.pinControls[pin.id] = null;
-                    }
-                }
-
-                if (this.pinControls[pin.id]) {
-                    this.pinControls[pin.id].updateValue();
-                }
-            }
         }
 
         private updateLightLevel() {

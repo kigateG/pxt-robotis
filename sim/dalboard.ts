@@ -53,7 +53,6 @@ namespace pxsim {
         irState: InfraredState;
         lcdState: LCDState;
         radioState: RadioState;
-        lightRGBState: LightRGBState;
         dynamixelState: DynamixelState;
 
         constructor(public boardDefinition: BoardDefinition) {
@@ -178,9 +177,6 @@ namespace pxsim {
             this.builtinVisuals["screen"] = () => new visuals.ScreenView();
             this.builtinPartVisuals["screen"] = (xy: visuals.Coord) => visuals.mkScreenPart(xy);
 
-            this.builtinParts["lightRGB"] = this.lightRGBState = new LightRGBState();
-
-            
             const neopixelPinCfg = getConfig(DAL.CFG_PIN_NEOPIXEL) ||
                 getConfig(DAL.CFG_PIN_DOTSTAR_DATA);
             if (neopixelPinCfg !== null) {
